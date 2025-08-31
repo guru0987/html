@@ -1,1 +1,77 @@
+<html>
+  <body>
+    <p>
+#include &lt;stdio.h&gt;
 
+int main() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int n, m, i, j, k;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int alloc[10][10], max[10][10], avail[10];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int need[10][10], finish[10], safeSeq[10];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int count = 0;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;printf("Enter number of processes: ");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d", &amp;n);<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;printf("Enter number of resources: ");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d", &amp;m);<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;printf("Enter Allocation Matrix:\n");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; n; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j = 0; j &lt; m; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d", &amp;alloc[i][j]);<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;printf("Enter Max Matrix:\n");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; n; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j = 0; j &lt; m; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d", &amp;max[i][j]);<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;printf("Enter Available Resources:\n");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; m; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d", &amp;avail[i]);<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Calculate Need matrix<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; n; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j = 0; j &lt; m; j++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;need[i][j] = max[i][j] - alloc[i][j];<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Initialize all processes as unfinished<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; n; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;finish[i] = 0;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Safety Algorithm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;while (count &lt; n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int found = 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; n; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (finish[i] == 0) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int flag = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j = 0; j &lt; m; j++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (need[i][j] &gt; avail[j]) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag = 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (flag) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (k = 0; k &lt; m; k++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avail[k] += alloc[i][k];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;safeSeq[count++] = i;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;finish[i] = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;found = 1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (found == 0) break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;// Final output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (count == n) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("\nSystem is in SAFE state.\nSafe Sequence: ");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; n; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("P%d ", safeSeq[i]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("\nSystem is in UNSAFE state.");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+}
+    </p>
+  </body>
+</html>
